@@ -32,17 +32,29 @@ types = data_hash.collect{|j| j["type"]}.uniq.sort_by{|word| word.downcase}
 book_authors = []
 both_authors = []
 long_cds = []
+years_in_titles = []
+years_in_chapters = []
+years_in_tracks = []
 puts "1. The 5 most exspenive items per type are as follows:"
+
 types.each do |type|
   puts "-------#{type}-------"
 
   # Select the uniq type set of hashes
-  uniq_type = data_hash.select{|s| s["type"] == type}
+  uniq_type = data_hash.select{|s| s["type"] == type} 
 
   # Find the top 5 most expensive items for each type
   puts uniq_type.sort_by{|j| -j["price"]}.take(5)
+
+  # Find any of the titles that have a year inside the title
+  years_in_titles << uniq_type.select{|j| j["title"].match(/\d{4}/)}
+
   if type == "book"
     book_authors = uniq_type.collect{|j| j["author"]}.uniq
+    uniq_type.each do |book|
+      chapter_list = book["chapters"]
+      years_in_chapters << chapter_list.select{|j| j.match(/\d{4}/)}
+    end
   elsif type == "cd"
     cd_authors = uniq_type.collect{|j| j["author"]}.uniq
     
@@ -50,6 +62,7 @@ types.each do |type|
     both_authors = cd_authors & book_authors
     uniq_type.each do |cd|
       track_list = cd["tracks"]
+      years_in_tracks << track_list.select{|j| j["name"].match(/\d{4}/)}
 
       # Count the amount of total seconds in a cd and see if it is greater than an hour in seconds
       if track_list.collect{|t| t["seconds"]}.inject(:+) > 3600
