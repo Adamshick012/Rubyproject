@@ -1,4 +1,13 @@
 #!/usr/bin/env ruby
+# This program takes in a JSON inventory list in the form
+# of plain text or a file and answers these specific questions about 
+# the inventory:
+# What are the 5 most expensive items from each category?
+# Which cds have a total running time longer than 60 minutes?
+# Which authors have also released cds?
+# Which items have a title, track, or chapter that contains a year?
+#
+# Author::    Adam Shick  (mailto:adamshick012e@gmail.com)
 require 'rubygems' # 1.8.7
 
 require 'json'
@@ -75,3 +84,5 @@ puts "2. CD's that are longer than an hour are as follows:"
 puts long_cds
 puts "3. The following authors have released both a book and cd:"
 puts both_authors
+puts "4. The following items have either a title, track, or chapter name that contains a year:"
+puts years_in_titles + years_in_chapters + years_in_tracks
